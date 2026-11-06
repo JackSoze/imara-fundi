@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b5532a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Imara Fundi">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Imara Fundi – King Post Calculator</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1f2420;--mute:#6b726c;--line:#d9d6cc;--acc:#b5532a;--acc2:#2f6b4f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171a18;--card:#222623;--ink:#eceae3;--mute:#9aa29b;--line:#383d39;--acc:#e0824f;--acc2:#6fbf97}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center}
+main{width:100%;max-width:420px;padding:16px}
+h1{font-size:20px;margin:4px 0 2px}
+.sub{color:var(--mute);font-size:13px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+svg{width:100%;height:auto;display:block}
+.row{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:8px;flex-wrap:wrap}
+label{font-size:13px;color:var(--mute)}
+input,select{font:inherit;font-size:18px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);width:130px;text-align:center}
+input:focus,select:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+select{width:auto;font-size:15px}
+.seg{display:flex;border:1.5px solid var(--line);border-radius:10px;overflow:hidden;margin-top:10px}
+.seg button{flex:1;padding:9px 6px;border:0;background:transparent;color:var(--mute);font:inherit;font-size:13px}
+.seg button.on{background:var(--acc);color:#fff}
+.res{text-align:center}
+.big{font-size:30px;font-weight:700;color:var(--acc2);line-height:1.1;white-space:nowrap}
+.res small{display:block;color:var(--mute);font-size:13px;margin-top:4px}
+.err{color:var(--acc);font-size:14px}
+.ks{position:relative;width:100%;aspect-ratio:340/262}
+.ks svg{position:absolute;inset:0;width:100%;height:100%}
+.ki{position:absolute;height:12.2%;width:auto;padding:0 2px;font-size:15px;border-radius:8px}
+.stp{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:22px;line-height:1}
+[hidden]{display:none!important}
+.trk{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.th{font-size:13px;color:var(--mute);margin-bottom:10px;text-align:center}
+.two{display:flex;gap:10px}
+.two>div{flex:1;display:flex;flex-direction:column;gap:6px;align-items:stretch}
+.two label{text-align:center}
+.trk input{width:100%;font-size:17px;padding:9px 6px}
+.mats{margin-top:12px}
+.res small.ft{border-top:1px solid var(--line);padding-top:10px;margin-top:0}
+.mat{text-align:left;padding:9px 0;border-top:1px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left}
+.l1{display:flex;gap:8px;align-items:baseline}
+.mn{font-size:16px;font-weight:600}
+.nd{font-size:14px;color:var(--mute)}
+.mo{margin-top:2px;font-size:16px;color:var(--acc2);line-height:1.3}
+.ol{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}
+.mo small{margin-top:2px}
+.res td{padding:11px 4px;vertical-align:middle}
+.res td:first-child{font-weight:600;font-size:16px}
+.res td:last-child{color:var(--acc2);font-size:15px;line-height:1.35}
+.hd td{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;font-weight:400!important;padding:0 4px 4px!important}
+.tabs{margin:0 0 12px}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left}
+td:nth-child(n+2){text-align:right}
+tr:last-child td{border:0}
+details{margin-top:14px;font-size:13px;color:var(--mute)}
+summary{cursor:pointer;padding:4px 0}
+details input{width:100px;font-size:15px;padding:7px}
+.note{font-size:12px;color:var(--mute);margin-top:8px;text-align:center}
+.menu button{display:flex;flex-direction:row;align-items:center;gap:14px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;font:inherit;cursor:pointer}
+.menu b{font-size:17px}
+.menu div{display:flex;flex-direction:column;gap:4px}
+.menu svg{width:46px;height:46px;flex:none;stroke:var(--acc);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu span{font-size:13px;color:var(--mute);line-height:1.4}
+.back{background:none;border:0;color:var(--acc);font:inherit;font-size:15px;padding:4px 0 10px;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+<h1>Imara Fundi</h1>
+<p class="sub">What this app can do – tap one to start</p>
+<div id="home" class="menu">
+<button id="goR" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 36h40"/><path d="M7 36L24 12l17 24"/><path d="M24 12v24"/><path d="M34 36a10 10 0 0 0-2-6"/></svg><div><b>Roof</b><span>King post height from the roof angle and the span or half span, plus rafter length. Sketch shows the distance.</span></div></button>
+<button id="goS" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 20l19-9 19 9-19 9z"/><path d="M5 20v7l19 9 19-9v-7"/><path d="M24 29v7"/></svg><div><b>Slab</b><span>Concrete volume, cement bags, sand and ballast. Books method or local mix. Sand and ballast ordered in lorries and pickups.</span></div></button>
+<button id="goC" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 8h16M19 8v30M29 8v30M14 40h20"/></svg><div><b>Columns</b><span>Concrete for any number of columns from side 1, side 2 and height. Cement, sand and ballast, with orders in lorries and pickups.</span></div></button>
+<button id="goK" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M18 6v36M30 6v36M18 14h12M18 22h12M18 30h12M18 38h12"/></svg><div><b>Column bars</b><span>Steel for columns: vertical bars and rings, total kg and how many 12 m bars to buy.</span></div></button>
+<button id="goB" type="button"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 40h36M12 40V28h24v12M20 28V8h8v20"/></svg><div><b>Bases</b><span>Concrete for pad footings from length, width, thickness and number of bases. Cement, sand and ballast, with orders.</span></div></button>
+</div>
+<button id="back" class="back" type="button" hidden>← Back to menu</button>
+<div id="roof" hidden>
+
+<div class="card">
+<svg id="sk" viewBox="0 0 300 205" aria-label="Roof truss sketch">
+<polygon id="tri" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+<line id="kp" stroke="var(--acc)" stroke-width="3" stroke-dasharray="6 5"/>
+<path id="arc" fill="none" stroke="var(--acc)" stroke-width="2"/>
+<text id="at" fill="var(--acc)" font-size="15" font-weight="600" text-anchor="middle" dominant-baseline="central">θ</text>
+<text id="kt" fill="var(--acc)" font-size="12" font-weight="600">king post</text>
+<g stroke="var(--acc)" stroke-width="2" fill="none" stroke-linecap="round"><line id="dl" x1="30" y1="178" x2="270" y2="178"/><line id="tl" x1="30" y1="167" x2="30" y2="189"/><line x1="270" y1="167" x2="270" y2="189"/><path id="da" d=""/></g>
+<text id="dt" x="150" y="201" text-anchor="middle" fill="var(--acc)" font-size="14" font-weight="600"></text>
+</svg>
+<div class="row">
+<label for="ang">Roof angle (°)</label>
+<input id="ang" type="number" inputmode="decimal" placeholder="e.g. 25" min="1" max="89" step="any">
+</div>
+<div class="row" style="margin-top:14px">
+<label for="dist">Distance</label>
+<input id="dist" type="number" inputmode="decimal" placeholder="e.g. 6" min="0" step="any">
+<select id="unit"><option value="m">m</option><option value="mm">mm</option><option value="ft">ft</option></select>
+</div>
+<div class="seg" role="group" aria-label="Distance meaning">
+<button id="bFull" class="on" type="button">Distance = full span</button>
+<button id="bHalf" type="button">Distance = half span</button>
+</div>
+</div>
+
+<div class="card res" id="out"><span class="sub">Enter the angle and distance to see the king post height.</span></div>
+</div>
+
+<div id="cbar" hidden>
+<div class="card">
+<div class="th" style="font-size:16px;color:var(--ink);font-weight:600">Column bars</div>
+<div style="position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);padding:4px 0 6px;border-bottom:1px solid var(--line)"><svg viewBox="0 0 340 204" aria-label="Column sketch" style="max-height:200px;margin:0 auto"><g id="kg"></g></svg></div>
+<div class="row" style="margin-top:12px"><label for="kn">How many columns?</label><input id="kn" type="number" inputmode="decimal" placeholder="e.g. 6" min="0" step="any"></div>
+<div class="row"><label for="kh">Total length of each vertical bar (m)</label><input id="kh" type="number" inputmode="decimal" placeholder="e.g. 3.6" min="0" step="any"></div>
+<div class="row"><label id="ksl">Ring size (mm)</label><input id="k1" type="number" inputmode="decimal" value="180" min="0" step="any" style="width:80px"><span>×</span><input id="k2" type="number" inputmode="decimal" value="180" min="0" step="any" style="width:80px"></div>
+<div class="sub" id="khint" style="margin:6px 0 0;text-align:center"></div>
+<div class="row"><label>Vertical bars</label><button class="stp" id="kmm" type="button">−</button><input id="km" type="number" inputmode="decimal" value="4" min="1" step="1" style="width:64px"><button class="stp" id="kmp" type="button">+</button><select id="kd"><option value="10">Y10</option><option value="12" selected>Y12</option><option value="16">Y16</option><option value="20">Y20</option><option value="25">Y25</option></select></div>
+<div class="sub" style="margin:14px 0 0;text-align:center">Ring details (already filled in, change only if needed)</div>
+<div class="row"><label for="ksd">Ring bar size</label><select id="ksd"><option value="6">R6</option><option value="8" selected>R8</option><option value="10">R10</option></select></div>
+<div class="row"><label for="ksp">Rings every (mm)</label><input id="ksp" type="number" inputmode="decimal" value="200" min="0" step="any"></div>
+<div class="sub" style="margin:14px 0 0;text-align:center">Are these foundation bars?</div>
+<div class="seg"><button id="kfN" class="on" type="button">No</button><button id="kfY" type="button">Yes, foundation bars</button></div>
+<div class="sub" id="kfh" style="margin:8px 0 0;text-align:center" hidden></div>
+
+</div>
+<div class="card res" id="kout"><span class="sub">Enter the number of columns and the height to see the steel needed.</span></div>
+</div>
+
+<div id="slab" hidden>
+<div class="card">
+<div class="th" id="mt" style="font-size:16px;color:var(--ink);font-weight:600"></div>
+<div class="seg" id="kRow" role="group" aria-label="Slab type" style="margin-bottom:6px">
+<button id="kGr" class="on" type="button">Ground floor</button>
+<button id="kSt" type="button">Storied floor</button>
+</div>
+<div class="row" id="nRow" hidden><label for="sn" id="nl">Number</label><input id="sn" type="number" inputmode="decimal" placeholder="e.g. 4" min="0" step="any"></div>
+<div class="row"><label for="sl" id="l1">Length (m)</label><input id="sl" type="number" inputmode="decimal" placeholder="e.g. 6" min="0" step="any"></div>
+<div class="row"><label for="sw" id="l2">Width (m)</label><input id="sw" type="number" inputmode="decimal" placeholder="e.g. 4" min="0" step="any"></div>
+<div class="row"><label for="st" id="l3">Thickness (mm)</label><input id="st" type="number" inputmode="decimal" placeholder="e.g. 150" min="0" step="any"></div>
+
+<div class="seg" role="group" aria-label="Mix method">
+<button id="mBk" type="button">Books method</button>
+<button id="mLoc" class="on" type="button">Local mix</button>
+</div>
+<div class="row" id="clsRow" hidden><label for="cls">Concrete class</label><select id="cls"><option value="15">C15 (1:3:6)</option><option value="20" selected>C20 (1:2:4)</option><option value="25">C25 (1:1.5:3)</option><option value="30">C30 (1:1:2)</option></select></div>
+<div class="trk"><div class="th">Truck sizes used for ordering sand and ballast</div><div class="two"><div><label for="lz">Lorry (tonnes)</label><input id="lz" type="number" inputmode="decimal" value="8"></div><div><label for="pk">Pickup (tonnes)</label><input id="pk" type="number" inputmode="decimal" value="2.5"></div></div></div>
+<details><summary>Rates used (tap to edit)</summary>
+<div class="row"><label for="pc">Cement / 50kg bag</label><input id="pc" type="number" inputmode="decimal" value="900"></div>
+<div class="row"><label for="ps">Sand / tonne</label><input id="ps" type="number" inputmode="decimal" value="2250"></div>
+<div class="row"><label for="pb">Ballast / tonne</label><input id="pb" type="number" inputmode="decimal" value="1750"></div>
+
+<div class="row"><label for="pst">Steel / kg (all-in)</label><input id="pst" type="number" inputmode="decimal" value="180"></div>
+</details>
+</div>
+<div class="card res" id="sout"><span class="sub">Enter length, width and thickness to see the materials.</span></div>
+</div>
+</main>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var full=true;
+function sketch(a){
+  var hw=120,cx=150,by=150;
+  var h=a>0&&a<90?Math.max(25,Math.min(135,hw*Math.tan(a*Math.PI/180))):60;
+  var ay=by-h;
+  $('tri').setAttribute('points',(cx-hw)+','+by+' '+(cx+hw)+','+by+' '+cx+','+ay);
+  $('kp').setAttribute('x1',cx);$('kp').setAttribute('x2',cx);$('kp').setAttribute('y1',ay);$('kp').setAttribute('y2',by);
+  var r=44,rad=Math.atan2(h,hw),x0=cx-hw;
+  $('arc').setAttribute('d','M '+(x0+r)+' '+by+' A '+r+' '+r+' 0 0 0 '+(x0+r*Math.cos(rad))+' '+(by-r*Math.sin(rad)));
+  var tr=r+13,bis=rad/2;$('at').setAttribute('x',x0+tr*Math.cos(bis));$('at').setAttribute('y',by-tr*Math.sin(bis));
+  $('kt').setAttribute('x',cx+8);$('kt').setAttribute('y',by-h/2);dim();
+}
+function dim(){
+  var x0=full?30:150,v=$('dist').value,u=$('unit').value;
+  $('dl').setAttribute('x1',x0);$('tl').setAttribute('x1',x0);$('tl').setAttribute('x2',x0);
+  $('da').setAttribute('d','M'+x0+' 178l9-5M'+x0+' 178l9 5M270 178l-9-5M270 178l-9 5');
+  $('dt').setAttribute('x',(x0+270)/2);$('dt').textContent=v?(v+' '+u):'distance';
+}
+function calc(){
+  var a=parseFloat($('ang').value),d=parseFloat($('dist').value),u=$('unit').value,o=$('out');
+  sketch(a);
+  if(isNaN(a)||isNaN(d)||$('ang').value===''||$('dist').value===''){o.innerHTML='<span class="sub">Enter the angle and distance to see the king post height.</span>';return}
+  if(a<=0||a>=90||d<=0){o.innerHTML='<span class="err">Angle must be between 0° and 90°, and distance above 0.</span>';return}
+  var run=full?d/2:d,t=Math.tan(a*Math.PI/180),h=run*t,raft=run/Math.cos(a*Math.PI/180);
+  var f=function(v){return u==='mm'?Math.round(v).toLocaleString():v.toFixed(1)};
+  o.innerHTML='<div class="sub" style="margin:0">King post height</div><div class="big">'+f(h)+' '+u+'</div>'+
+  '<small>Rafter length (run to apex): '+f(raft)+' '+u+'</small>'+
+  '<small>Half span used: '+f(run)+' '+u+'</small>';
+}
+['ang','dist','unit'].forEach(function(i){$(i).addEventListener('input',calc);$(i).addEventListener('change',calc)});
+$('bFull').onclick=function(){full=true;$('bFull').className='on';$('bHalf').className='';calc()};
+$('bHalf').onclick=function(){full=false;$('bHalf').className='on';$('bFull').className='';calc()};
+var mix='loc',kind='gr';
+var MIX={bk:{b:1.524/7/0.035,s:2/7*1.524*1550,g:4/7*1.524*1350,n:'Books method'},loc:{b:6.6,s:960,g:1140,n:'Local mix',c:'C20 (1:2:4)'}};
+var CL={15:[3,6,'1:3:6'],20:[2,4,'1:2:4'],25:[1.5,3,'1:1.5:3'],30:[1,2,'1:1:2']};
+function bk(){var c=CL[$('cls').value],s=1+c[0]+c[1];return {b:1.524/s/0.035,s:c[0]/s*1.524*1550,g:c[1]/s*1.524*1350,n:'Books method',c:'C'+$('cls').value+' ('+c[2]+')'}}
+function gv(i){var v=parseFloat($(i).value);return isNaN(v)?0:v}
+function money(x){return 'KSh '+Math.round(x).toLocaleString()}
+function mat(a,n,o){return '<div class="mat"><div class="l1"><span class="mn">'+a+'</span><span class="nd">'+n+'</span></div>'+(o?'<div class="mo">Order: '+o+'</div>':'')+'</div>'}
+function row(a,b,c){return '<tr><td>'+a+'</td><td>'+b+'</td><td>'+c+'</td></tr>'}
+function lq(t){return Math.ceil(t/(gv('lz')||8)*8-1e-9)/8}
+function ln(q){var w=Math.floor(q),f=q-w,s={0.125:'⅛',0.25:'¼',0.375:'⅜',0.5:'½',0.625:'⅝',0.75:'¾',0.875:'⅞'}[f]||'';return (w>0?w:'')+s+(q>1?' lorries':' lorry')}
+function oc(t){var L=gv('lz')||8,P=gv('pk')||2.5,q=P/4,e=1e-9,n=Math.floor(t/L+e),r=t-n*L,hf=0,k=0;if(r<e)r=0;
+  if(r>L/2+0.1){hf=1;r-=L/2}
+  if(r>0.1)k=Math.ceil((r-0.1)/q-e);
+  if(k*q>L/2+e){if(hf){n++;hf=0}else hf=1;k=0}
+  var p=[],np=Math.floor(k/4),kr=k%4;
+  if(n)p.push(n===1?'1 lorry':n+' lorries');
+  if(hf)p.push('half lorry');
+  if(np)p.push(np===1?'1 pickup':np+' pickups');
+  if(kr)p.push(['','quarter','half','three-quarter'][kr]+' pickup');
+  var tot=n*L+hf*L/2+k*q,s=p.length>1?p.slice(0,-1).join(', ')+' and '+p[p.length-1]:p[0];
+  return {s:s,t:Math.round(tot*10)/10}}
+function od(t){return oc(t).s}
+function slab(){
+  var L=gv('sl'),W=gv('sw'),T=gv('st'),N=gv('sn'),o=$('sout');
+  if(!(L>0&&W>0&&T>0)||(md!=='slab'&&!(N>0))){o.innerHTML='<span class="sub">Enter all the sizes to see the materials.</span>';return}
+  var m=mix==='bk'?bk():MIX.loc,area=L*W,vol=md==='col'?N*L*W*T/1e6:md==='base'?N*L*W*T/1000:area*T/1000*(kind==='st'?1.35:1),sm=md==='col'?N+' columns · ':md==='base'?N+' bases · ':(kind==='st'?'Storied floor (×1.35) · ':'Ground floor · ')+area.toFixed(1)+' m² · ',bags=vol*m.b,sand=vol*m.s/1000,bal=vol*m.g/1000,steel=0;
+  var ob=Math.ceil(bags-1e-9);
+  var qs=lq(sand),qb=lq(bal),lz=gv('lz')||8;
+  var cc=ob*gv('pc'),cs=qs*lz*gv('ps'),cb=qb*lz*gv('pb'),cst=steel*gv('pst'),tot=cc+cs+cb+cst;
+  var h='<div class="top"><div class="tl"><div class="sub" style="margin:0">Concrete volume</div>'+
+  '<small>'+sm+m.n+'</small></div><div class="big">'+vol.toFixed(1)+' m³</div></div>'+
+  ''+
+  '<div class="mats">'+mat('Cement','Need '+bags.toFixed(1)+' bags',ob+' bags')+
+  mat('Sand','Need '+sand.toFixed(1)+' t',od(sand)+' ≈ '+oc(sand).t+' t')+
+  mat('Ballast','Need '+bal.toFixed(1)+' t',od(bal)+' ≈ '+oc(bal).t+' t');
+  if(steel>0)h+=mat('Steel','Need '+steel.toFixed(1)+' kg','');
+  h+='</div><small class="ft">'+m.c+' · per m³: '+m.b.toFixed(1)+' bags · '+(m.s/1000).toFixed(2)+' t sand · '+(m.g/1000).toFixed(2)+' t ballast</small>';
+  o.innerHTML=h;
+}
+['sl','sw','st','sn','pc','ps','pb','pst','lz','pk'].forEach(function(i){$(i).addEventListener('input',slab)});
+$('mBk').onclick=function(){mix='bk';$('mBk').className='on';$('mLoc').className='';$('clsRow').hidden=false;slab()};
+$('mLoc').onclick=function(){mix='loc';$('mLoc').className='on';$('mBk').className='';$('clsRow').hidden=true;slab()};
+$('cls').addEventListener('change',slab);
+$('kGr').onclick=function(){kind='gr';$('kGr').className='on';$('kSt').className='';slab()};
+$('kSt').onclick=function(){kind='st';$('kSt').className='on';$('kGr').className='';slab()};
+var md='slab',CFG={slab:{t:'Slab',l:['Length (m)','Width (m)','Thickness (mm)'],p:['e.g. 6','e.g. 4','e.g. 150']},base:{t:'Bases (pad footings)',n:'Number of bases',l:['Length (m)','Width (m)','Thickness (mm)'],p:['e.g. 1.2','e.g. 1.2','e.g. 300']},col:{t:'Columns',n:'Number of columns',l:['Side 1 (mm)','Side 2 (mm)','Height (m)'],p:['e.g. 230','e.g. 230','e.g. 3']}};
+function setMode(v){md=v;var c=CFG[v];$('mt').textContent=c.t;$('kRow').hidden=v!=='slab';$('nRow').hidden=!c.n;if(c.n)$('nl').textContent=c.n;['l1','l2','l3'].forEach(function(id,i){$(id).textContent=c.l[i]});['sl','sw','st'].forEach(function(id,i){$(id).placeholder=c.p[i];$(id).value=''});$('sn').value='';slab();show('slab')}
+var kring=true,kfound=false;
+function cbar(){var N=gv('kn'),S1=gv('k1'),S2=gv('k2'),H=gv('kh'),nb=gv('km'),D=+$('kd').value,d=+$('ksd').value,sp=gv('ksp'),c=25,hk=kfound?Math.max(12*D,300):0,o=$('kout'),R1=kring?S1:S1-2*c,R2=kring?S2:S2-2*c,C1=kring?S1+2*c:S1,C2=kring?S2+2*c:S2;
+  if(!(N>0&&S1>0&&S2>0&&H>0&&nb>0&&sp>0)||R1<=0||R2<=0){o.innerHTML='<span class="sub">Enter the number of columns and the height to see the steel needed.</span>';return}
+  var ml=H*1000+hk,mp=N*nb,sl=2*(R1+R2)+2*Math.max(10*d,75)+50,sc=Math.ceil(H*1000/sp-1e-9)+1,sn=N*sc;
+  var kg=function(x,m){return x*x/162*m},mm=mp*ml/1000,sm=sn*sl/1000,mk=kg(D,mm),sk=kg(d,sm);
+  var pb=function(len,n){return Math.ceil(n/Math.max(1,Math.floor(12000/len))-1e-9)};
+  o.innerHTML='<div class="top"><div class="tl"><div class="sub" style="margin:0">Total steel</div><small>'+N+' columns · '+C1+' × '+C2+' mm · bars '+H+' m long</small></div><div class="big">'+Math.round(mk+sk)+' kg</div></div><div class="mats">'+
+  mat('Vertical bars Y'+D,'Need '+mp+' pieces × '+(ml/1000).toFixed(2)+' m'+(hk?' (incl. '+hk+' mm hook)':'')+' = '+Math.round(mm)+' m',pb(ml,mp)+' bars of 12 m ≈ '+Math.round(mk)+' kg')+
+  mat('Rings R'+d+' ('+R1+' × '+R2+' mm)','Need '+sn+' rings × '+(sl/1000).toFixed(2)+' m = '+Math.round(sm)+' m',pb(sl,sn)+' bars of 12 m ≈ '+Math.round(sk)+' kg')+
+  '</div><small class="ft">'+sc+' rings per column · '+nb+' vertical bars each</small>';
+}
+function ksk(){var g=$('kg');if(!g)return;
+  var S1=gv('k1')||(kring?180:230),S2=gv('k2')||(kring?180:230),c=25,D=+$('kd').value,d=+$('ksd').value,nb=Math.max(0,Math.min(16,Math.round(gv('km')))),H=gv('kh'),sp=gv('ksp')||200,
+  R1=kring?S1:Math.max(S1-2*c,1),R2=kring?S2:Math.max(S2-2*c,1),C1=kring?S1+2*c:S1,C2=kring?S2+2*c:S2,
+  m=Math.max(C1,C2),k=110/m,w=C1*k,h=C2*k,cx=245,cy=84,x=cx-w/2,y=cy-h/2,ins=Math.max(c*k,3),r=function(v){return Math.round(v*10)/10},i,t='';
+  var x0=40,y0=20,wd=44,ht=140,n=Math.min(H>0?Math.ceil(H*1000/sp)+1:6,16);
+  t+='<g font-size="10" fill="var(--mute)" text-anchor="middle"><text x="62" y="12">Side view</text><text x="245" y="12">Cross-section</text><text x="62" y="186">'+(H>0?'Bar length '+H+' m':'Bar length')+'</text></g>';
+  for(i=0;i<n;i++){var yy=y0+6+(ht-12)*(n>1?i/(n-1):0);t+='<line x1="'+(x0+2)+'" x2="'+(x0+wd-2)+'" y1="'+yy+'" y2="'+yy+'" stroke="var(--acc)" stroke-width="2"/>'}
+  var ra=Math.min(1,n-1),ya=y0+6+(ht-12)*(n>1?ra/(n-1):0),yb=y0+6+(ht-12)*(n>1?Math.min(ra+1,n-1)/(n-1):0),mx=x0+wd+10;
+  t+='<path d="M'+(x0+wd-2)+' '+ya+'h'+(mx+4-x0-wd+2)+'M'+(x0+wd-2)+' '+yb+'h'+(mx+4-x0-wd+2)+'M'+mx+' '+ya+'v'+(yb-ya)+'" stroke="var(--acc)" stroke-width="1.5" fill="none"/><path d="M'+(mx-3)+' '+(ya+4)+'L'+mx+' '+ya+'L'+(mx+3)+' '+(ya+4)+'M'+(mx-3)+' '+(yb-4)+'L'+mx+' '+yb+'L'+(mx+3)+' '+(yb-4)+'" stroke="var(--acc)" stroke-width="1.5" fill="none"/>';
+  t+='<g font-size="10" fill="var(--acc)"><text x="'+(mx+8)+'" y="'+((ya+yb)/2-1)+'">rings every</text><text x="'+(mx+8)+'" y="'+((ya+yb)/2+11)+'">'+r(sp)+' mm</text></g>';
+  t+='<rect x="'+x0+'" y="'+y0+'" width="'+wd+'" height="'+ht+'" fill="none" stroke="var(--ink)" stroke-width="3"/><line x1="'+(x0+8)+'" x2="'+(x0+8)+'" y1="'+(y0-4)+'" y2="'+(y0+ht+4)+'" stroke="var(--acc2)" stroke-width="3"/><line x1="'+(x0+wd-8)+'" x2="'+(x0+wd-8)+'" y1="'+(y0-4)+'" y2="'+(y0+ht+4)+'" stroke="var(--acc2)" stroke-width="3"/>';
+  if(kfound){var hh=Math.max(12*D,300),yb2=y0+ht+4;t+='<path d="M'+(x0+8)+' '+yb2+'h10M'+(x0+wd-8)+' '+yb2+'h-10" stroke="var(--acc2)" stroke-width="3" fill="none"/><text x="62" y="198" font-size="10" fill="var(--acc2)" text-anchor="middle">+ hook '+hh+' mm</text>'}
+  t+='<path d="M'+(x0-12)+' '+y0+'v'+ht+'M'+(x0-17)+' '+y0+'h10M'+(x0-17)+' '+(y0+ht)+'h10" stroke="var(--acc)" stroke-width="2" fill="none"/>';
+  t+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="none" stroke="var(--ink)" stroke-width="3"/><rect x="'+(x+ins)+'" y="'+(y+ins)+'" width="'+(w-2*ins)+'" height="'+(h-2*ins)+'" fill="none" stroke="var(--acc)" stroke-width="2.5"/>';
+  var bi=ins+Math.max(6,(d+D/2)*k+1),a=x+bi,b=x+w-bi,e=y+bi,f=y+h-bi,p=[[a,e],[b,e],[b,f],[a,f]].slice(0,Math.min(nb,4)),br=Math.max(3.5,D*k/2);
+  if(nb>4){var q=nb-4,tt=Math.ceil(q/2),u=q-tt;for(i=1;i<=tt;i++)p.push([a+(b-a)*i/(tt+1),e]);for(i=1;i<=u;i++)p.push([a+(b-a)*i/(u+1),f])}
+  p.forEach(function(z){t+='<circle cx="'+z[0]+'" cy="'+z[1]+'" r="'+br+'" fill="var(--acc2)"/>'});
+  t+='<g font-size="10" text-anchor="middle"><text x="'+cx+'" y="152" fill="var(--mute)">Column '+r(C1)+' × '+r(C2)+' mm</text><text x="'+cx+'" y="166" fill="var(--acc)">Ring '+r(R1)+' × '+r(R2)+' mm</text><text x="'+cx+'" y="180" fill="var(--acc2)">'+nb+' vertical bars Y'+D+'</text></g>';
+  g.innerHTML=t;var hn=$('khint');if(hn)hn.textContent='Ring size = full column size minus '+c+' mm on each side. Example: 230 mm column → '+(230-2*c)+' mm ring.'}
+function setKf(f){kfound=f;$('kfN').className=f?'':'on';$('kfY').className=f?'on':'';var e=$('kfh');e.hidden=!f;if(f)e.textContent='A hook of 12d or 300 mm, whichever is larger, is added to each bar: '+Math.max(12*(+$('kd').value),300)+' mm';ksk();cbar()}
+$('kfN').onclick=function(){setKf(false)};$('kfY').onclick=function(){setKf(true)};
+$('kd').addEventListener('change',function(){if(kfound)setKf(true)});
+$('kmm').onclick=function(){$('km').value=Math.max(1,Math.round(gv('km'))-1);ksk();cbar()};
+$('kmp').onclick=function(){$('km').value=Math.min(16,Math.round(gv('km'))+1);ksk();cbar()};
+['kn','k1','k2','kh','km','kd','ksd','ksp'].forEach(function(i){var f=function(){ksk();cbar()};$(i).addEventListener('input',f);$(i).addEventListener('change',f)});
+ksk();
+function show(v){['home','roof','slab','cbar'].forEach(function(i){$(i).hidden=i!==v});$('back').hidden=v==='home';window.scrollTo(0,0)}
+$('goR').onclick=function(){show('roof')};
+$('goS').onclick=function(){setMode('slab')};
+$('goC').onclick=function(){setMode('col')};
+$('goK').onclick=function(){show('cbar')};
+$('goB').onclick=function(){setMode('base')};
+$('back').onclick=function(){show('home')};
+sketch(NaN);
+})();
+</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
+</body>
+</html>
